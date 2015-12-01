@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 
 class TaskController extends Controller
 {
@@ -17,7 +18,13 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        $tasks = Task::all();
+
+        return Response::json([
+
+           'data' => $tasks->toArray()
+
+        ], 200);
     }
 
     /**
@@ -52,7 +59,17 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        //
+      $tasks = Task::find($id);
+
+        if( ! $tasks){
+            return Response::json([
+                'error' => 'Tasks does not exist',
+
+                'code'=> 195
+
+            ],404);
+        }
+
     }
 
     /**
