@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\Transformers\TagTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -23,9 +24,11 @@ class TaskController extends Controller
 
         $tasks = Task::all();
 
+        $transformer = new TagTransformer();
+
         return Response::json([
 
-            'data' => $this->transform($tasks),
+            'data' => $transformer->transformCollection($tasks),
 
 
         ], 200);
@@ -76,7 +79,7 @@ class TaskController extends Controller
 
         return Response::json([
 
-            'data' => $this->transformCollection($task)
+            'data' => $this->transform($task)
 
         ], 200);
 
@@ -142,17 +145,7 @@ class TaskController extends Controller
         $task->save();
     }
 
-    private function transformCollection($tasks)
-    {
-        return array_map([$this, 'transform'], $tasks->toArray());
-    }
 
-    private function transform($task)
-    {
-            return [
-                'name' => $task['name'],
-                'done' => (boolean) $task['done'],
-                'prioridad' => $task['priority']
-            ];
-    }
+
+
 }
