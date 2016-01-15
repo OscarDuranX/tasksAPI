@@ -12,14 +12,11 @@ use Illuminate\Support\Facades\Response;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     protected $tagTransformer;
-
+    /**
+     * TagController constructor.
+     * @param $tagTransformer
+     */
     public function __construct(TagTransformer $tagTransformer)
     {
         $this->tagTransformer = $tagTransformer;
@@ -31,11 +28,9 @@ class TagController extends Controller
 
         $tags = Tag::all();
 
-
-
         return Response::json([
 
-            $this -> TagTransformer->transformCollection($tags)
+            $this -> tagTransformer->transformCollection($tags)
 
         ], 200);
     }
@@ -89,7 +84,7 @@ class TagController extends Controller
 
         return Response::json([
 
-            'data' =>  $this->transform($tag)
+            $this->tagTransformer->transform($tag),
         ], 200);
 
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Task;
-use App\Transformers\TagTransformer;
+use App\Transformers\TaskTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,6 +17,16 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $taskTransformer;
+    /**
+     * TagController constructor.
+     * @param $tagTransformer
+     */
+    public function __construct(TaskTransformer $taskTransformer)
+    {
+        $this->taskTransformer = $taskTransformer;
+    }
     public function index()
     {
 
@@ -24,11 +34,11 @@ class TaskController extends Controller
 
         $tasks = Task::all();
 
-        $transformer = new TagTransformer();
+
 
         return Response::json([
 
-            'data' => $transformer->transformCollection($tasks),
+           $this -> taskTransformer->transformCollection($tasks),
 
 
         ], 200);
@@ -79,7 +89,8 @@ class TaskController extends Controller
 
         return Response::json([
 
-            'data' => $this->transform($task)
+            $this -> taskTransformer->transform($task),
+
 
         ], 200);
 
