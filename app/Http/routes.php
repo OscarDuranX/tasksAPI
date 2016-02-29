@@ -19,4 +19,4 @@ Route::get('/', function () {
 Route::resource('task', 'TaskController');
 Route::resource('tag', 'TagController');
 
-//Route::resource('tag', 'TagController@show');
+Route::resource('tag', 'TagController@index');
