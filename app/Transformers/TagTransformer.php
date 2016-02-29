@@ -15,7 +15,7 @@ class TagTransformer extends Transformer
     public function transform($item)
     {
         return [
-            'Title' => $item['name'],
+            'title' => $item['name'],
             //'Done' => (boolean)$item['onoff']
         ];
     }
