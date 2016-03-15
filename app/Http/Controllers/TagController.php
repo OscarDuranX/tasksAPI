@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
+use App\Task;
 use App\Transformers\TagTransformer;
 use Illuminate\Http\Request;
 
@@ -26,13 +27,11 @@ class TagController extends Controller
     {
        // return Tag::all();
 
-        $tags = Tag::all();
+        $tags = $this->getTags($taskId = null);
 
-        return Response::json([
+        return $this->respond($this->tagTranformer->transformCollection($tags))->setStatusCode(200);
 
-            $this -> tagTransformer->transformCollection($tags)
 
-        ], 200);
     }
 
     /**
@@ -135,6 +134,11 @@ class TagController extends Controller
         $tag->name = $request->name;
 
         $tag->save();
+    }
+
+    public function getTags($idTag)
+    {
+        return $idTag ? Task::findOrFail($idTag)->tags : Tag::all();
     }
 
 
