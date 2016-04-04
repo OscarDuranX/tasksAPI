@@ -20,3 +20,8 @@ Route::resource('task', 'TaskController');
 Route::resource('tag', 'TagController');
 
 Route::resource('tag', 'TagController@index');
+
+
+//Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function () {
+//    Route::post('/short', 'UrlMapperController@store');
+//});
