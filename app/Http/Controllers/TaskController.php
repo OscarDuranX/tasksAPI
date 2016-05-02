@@ -26,7 +26,7 @@ class TaskController extends Controller
     public function __construct(TaskTransformer $taskTransformer)
     {
         $this->taskTransformer = $taskTransformer;
-        $this->middleware('auth:api');
+    //    $this->middleware('auth:api');
     }
     public function index()
     {

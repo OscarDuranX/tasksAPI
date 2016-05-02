@@ -16,7 +16,7 @@ class CreateTagsTable extends Migration
             $table->increments('id');
             $table->string('title');
             //$table->string('name');
-            //$table->boolean('onoff');
+            $table->boolean('onoff');
             $table->timestamps();
         });
     }

@@ -11,15 +11,22 @@
 |
 */
 
+use Faker\Provider\es_ES\Person;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 
-Route::resource('task', 'TaskController');
-Route::resource('tag', 'TagController');
+
+
 
 Route::resource('tag', 'TagController@index');
+//
+Route::resource('login', 'TagController@login');
+
+
+
 
 
 //Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function () {

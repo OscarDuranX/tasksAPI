@@ -42,9 +42,27 @@ class TasksAPITest extends TestCase
      */
     public function testTaskInDatabaseAreShownByAPI()
     {
+
+
         $task = $this->createFakeTask();
-        $this->get('/task/' . $task->id)
+        //$user = factory(App\User::class)->create();
+
+       // $this->a
+        $this->get('/task' . $task->id)
             ->seeJsonContains(['name' => $task->name, 'done' => $task->done, 'priority' => $task->priority ])
+            ->seeStatusCode(200);
+    }
+
+    public function testTaskInDatabaseAreShownByAPI2()
+    {
+
+
+        $task = $this->createFakeTask();
+        $user = factory(App\User::class)->create();
+
+        // $this->a
+        $this->get('/task?api_token='. $user->api_token) ->dump()
+            ->seeJsonContains(['*' => 'name', 'done', 'priority' ])
             ->seeStatusCode(200);
     }
     /**
@@ -114,7 +132,10 @@ class TasksAPITest extends TestCase
      * @return void
      */
 
-    public function testTasks(){
+    public function testTasksSeeThePageCorrect()
+    {
+            $this->get('task');
+
 
     }
 

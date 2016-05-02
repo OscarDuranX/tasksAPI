@@ -24,11 +24,11 @@ class TagController extends Controller
         //$this->middleware('auth:api');
     }
 
-    public function index()
+    public function index($taskId = null)
     {
        // return Tag::all();
 
-        $tags = $this->getTags($taskId = null);
+        $tags = $this->getTags($taskId);
 
         return $this->respond($this->tagTranformer->transformCollection($tags))->setStatusCode(200);
 
@@ -139,7 +139,12 @@ class TagController extends Controller
 
     public function getTags($idTag)
     {
-        return $idTag ? Task::findOrFail($idTag)->tags : Tag::all();
+        return $idTag ? Tag::findOrFail($idTag)->tags : Tag::all();
+    }
+
+    public function login()
+    {
+        return "Tot OK";
     }
 
 
