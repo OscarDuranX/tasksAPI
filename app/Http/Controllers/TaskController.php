@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Task;
 use App\Transformers\TaskTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\Support\Facades\Input;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Response;
-
-class TaskController extends Controller
+class TaskController extends ApiController
 {
     protected $taskTransformer;
     /**
@@ -28,8 +26,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //1. No és retorna: paginació
-        //return Task::all();
+
         $task = Task::all();
         return $this->respond($this->taskTransformer->transformCollection($task->all()));
     }

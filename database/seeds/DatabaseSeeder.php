@@ -2,6 +2,7 @@
 
 use App\Tag;
 use App\Task;
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->seedTasks($faker);
         $this->seedTags($faker);
         $this->seedTaskTag($faker);
+        //$this->seedUser($faker);
 
         Model::reguard();
     }
@@ -33,8 +35,9 @@ class DatabaseSeeder extends Seeder
             $task= new Task();
 
             $task->name = $faker->sentence;
-            $task->done =$faker->boolean;
             $task->priority= $faker->randomDigit;
+            $task->done =$faker->boolean;
+
 
             $task->save();
             
@@ -47,7 +50,7 @@ class DatabaseSeeder extends Seeder
             $tag= new Tag();
 
             $tag->title = $faker->word;
-            $tag->onoff =$faker->boolean;
+           // $tag->onoff =$faker->boolean;
 
             $tag->save();
 
@@ -64,6 +67,20 @@ class DatabaseSeeder extends Seeder
                 'tag_id' => $faker->randomDigit
             ]);
         }
+    }
+
+    private function seedUser($faker){
+
+        $user= new User();
+
+        $user->name= $faker->word;
+        $user->email= $faker->email;
+        $user->password= "$2y$10$9/ADUpitr.IOcU8OvUoBkuDHjrVomxWg3iDME13eZtwnKynJy5sXK";
+        $user->api_token= "0886cb03e9d7bf30ac574e8d5648a43f1dcb52cd";
+        $user->remember_token=  "tSkMqlvSbV";
+
+        $user->save();
+
     }
 
 }

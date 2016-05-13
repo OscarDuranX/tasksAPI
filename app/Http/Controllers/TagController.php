@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class TagController extends Controller
+class TagController extends ApiController
 {
     /**
      * @var TagTransformer
