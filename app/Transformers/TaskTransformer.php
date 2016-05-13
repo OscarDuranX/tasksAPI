@@ -17,7 +17,7 @@ class TaskTransformer extends Transformer
         return [
             'Nom' => $task['name'],
             'Done' => (boolean) $task['done'],
-            'Prioridad' => $task['priority']
+            'Prioridad' =>(int)$task['priority'],
         ];
     }
 

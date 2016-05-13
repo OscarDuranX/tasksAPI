@@ -18,14 +18,9 @@ Route::get('/', function () {
 });
 
 
-
-
-
-Route::resource('tag', 'TagController');
-//
-Route::resource('login', 'TagController@login');
-
-
+Route::get('/auth/login', function () {
+    return 'No tens acces a la API';
+});
 
 
 
