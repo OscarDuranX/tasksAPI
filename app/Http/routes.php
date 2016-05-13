@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 
 
-Route::resource('tag', 'TagController@index');
+Route::resource('tag', 'TagController');
 //
 Route::resource('login', 'TagController@login');
 

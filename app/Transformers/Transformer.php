@@ -12,12 +12,9 @@ namespace App\Transformers;
 abstract class Transformer
 {
 
-    public function transformCollection($items)
+    public function transformCollection(array $items)
     {
-        return array_map(
-            [$this,'transform'],
-            $items->toArray()
-        );
+        return array_map([$this, 'transform'], $items);
 
     }
 

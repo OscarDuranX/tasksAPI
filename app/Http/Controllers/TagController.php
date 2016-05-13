@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tag;
 use App\Task;
 use App\Transformers\TagTransformer;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -29,8 +30,10 @@ class TagController extends Controller
        // return Tag::all();
 
         $tags = $this->getTags($taskId);
+        //dd($tags);
 
-        return $this->respond($this->tagTranformer->transformCollection($tags))->setStatusCode(200);
+
+        return $this->respond($this->tagTransformer->transformCollection($tags->all()));
 
 
     }
