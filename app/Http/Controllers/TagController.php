@@ -10,10 +10,14 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
 class TagController extends Controller
 {
+    /**
+     * @var TagTransformer
+     */
     protected $tagTransformer;
     /**
      * TagController constructor.
@@ -22,22 +26,19 @@ class TagController extends Controller
     public function __construct(TagTransformer $tagTransformer)
     {
         $this->tagTransformer = $tagTransformer;
-        //$this->middleware('auth:api');
     }
-
+    /**
+     * Display a listing of the resource.
+     * @param null $taskId
+     * @return \Illuminate\Http\Response
+     */
     public function index($taskId = null)
     {
-       // return Tag::all();
-
-        $tags = $this->getTags($taskId);
-        //dd($tags);
-
-
-        return $this->respond($this->tagTransformer->transformCollection($tags->all()));
-
-
+        //1. No és retorna: paginació
+        //return Tag::all();
+        $tag = $this->getTags($taskId);
+        return $this->respond($this->tagTransformer->transformCollection($tag->all()));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -47,108 +48,80 @@ class TagController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *  @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $tag = new Tag();
-
-        $this->saveTag($request, $tag);
-
+        if (!Input::get('title'))
+        {
+            return $this->setStatusCode(IlluminateResponse::HTTP_UNPROCESSABLE_ENTITY)
+                ->respondWithError('Parameters failed validation for a task.');
+        }
+        Tag::create(Input::all());
+        return $this->respondCreated('Task successfully created.');
     }
-
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $tag = Tag::find($id);
-        //$tag = Tag::where('id' ,$id)->first();
-
-        if( ! $tag){
-
-            return Response::json([
-
-                'error' => [
-
-                    'message' => 'Tag does not exist'
-                ]
-
-            ], 404);
+        if (!$tag) {
+            return $this->respondNotFound('Tag does not exsist');
         }
-
-        return Response::json([
-
-            $this->tagTransformer->transform($tag),
-        ], 200);
-
-
+        return $this->respond([
+            'data' => $this->tagTransformer->transform($tag)
+        ]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        return $tag = Tag::findOrFail($id);
-
-        $this->saveTag($request, $tag);
+        $tag = Tag::find($id);
+        if (!$tag)
+        {
+            return $this->respondNotFound('Tag does not exist!');
+        }
+        $tag->title = $request->title;
+        $tag->save();
     }
-
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         Tag::destroy($id);
     }
-
     /**
-     * @param Request $request
-     * @param $tag
+     * @param $taskId
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function saveTag(Request $request, $tag)
+    public function getTags($taskId)
     {
-        $tag->name = $request->name;
-
-        $tag->save();
+        return $taskId ? Task::findOrFail($taskId)->tags : Tag::all();
     }
-
-    public function getTags($idTag)
-    {
-        return $idTag ? Tag::findOrFail($idTag)->tags : Tag::all();
-    }
-
-    public function login()
-    {
-        return "Tot OK";
-    }
-
 
 }

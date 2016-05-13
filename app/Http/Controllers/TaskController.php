@@ -12,39 +12,27 @@ use Illuminate\Support\Facades\Response;
 
 class TaskController extends Controller
 {
+    protected $taskTransformer;
+    /**
+     * TaskController constructor.
+     * @param $taskTransformer
+     */
+    public function __construct(TaskTransformer $taskTransformer)
+    {
+        $this->taskTransformer = $taskTransformer;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-    protected $taskTransformer;
-    /**
-     * TagController constructor.
-     * @param $tagTransformer
-     */
-    public function __construct(TaskTransformer $taskTransformer)
-    {
-        $this->taskTransformer = $taskTransformer;
-    //    $this->middleware('auth:api');
-    }
     public function index()
     {
-
-       // return Task::all();
-
-        $tasks = Task::all();
-
-
-
-        return Response::json([
-
-           $this -> taskTransformer->transformCollection($tasks),
-
-
-        ], 200);
+        //1. No és retorna: paginació
+        //return Task::all();
+        $task = Task::all();
+        return $this->respond($this->taskTransformer->transformCollection($task->all()));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -54,110 +42,73 @@ class TaskController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *  @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $task = new Task();
-
-        $this->saveTask($request, $task);
-
+        if (!Input::get('name') or !Input::get('done') or !Input::get('priority'))
+        {
+            return $this->setStatusCode(IlluminateResponse::HTTP_UNPROCESSABLE_ENTITY)
+                ->respondWithError('Parameters failed validation for a task.');
+        }
+        Task::create(Input::all());
+        return $this->respondCreated('Task successfully created.');
     }
-
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-      $task = Task::find($id);
-
-        if( ! $task){
-            return Response::json([
-                'error' => 'Tasks does not exist',
-
-                'code'=> 195
-
-            ],404);
+        $task = Task::find($id);
+        if (!$task) {
+            return $this->respondNotFound('Task does not exsist');
         }
-
-        return Response::json([
-
-            $this -> taskTransformer->transform($task),
-
-
-        ], 200);
-
-
-
+        return $this->respond([
+            'data' => $this->taskTransformer->transform($task)
+        ]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $task = Task::find($id);
-
-        if( ! $task){
-            return Response::json([
-                'error' => 'Tasks does not exist',
-
-                'code'=> 195
-
-            ],404);
+        if (!$task)
+        {
+            return $this->respondNotFound('Task does not exist!!');
         }
-
-        $this->saveTask($request, $task);
+        $task->name = $request->name;
+        $task->priority = $request->priority;
+        $task->done = $request->done;
+        $task->save();
     }
-
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         Task::destroy($id);
     }
-
-    /**
-     * @param Request $request
-     * @param $task
-     */
-    public function saveTask(Request $request, $task)
-    {
-        $task->name = $request->name;
-        $task->priority = $request->priority;
-        $task->done = $request->done;
-
-        $task->save();
-    }
-
-
-
-
 }
