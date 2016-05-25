@@ -18,6 +18,5 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password' => bcrypt(str_random(10)),
         'api_token' => sha1(uniqid(rand(), true)),
         'remember_token' => str_random(10),
-        //'api_token' =>  sha1(uniqid(rand(), true)),
     ];
 });
